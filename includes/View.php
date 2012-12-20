@@ -29,10 +29,7 @@
 			}
 			if( ! file_exists($main_file = $controller_path . $action . '.php') ) {
 				$error = 'Include no encontrado: ' . $main_file;
-				header("HTTP 1.1 500 Internal Server Error");
-				// View::make('error.500', false);
-
-				exit;
+				return Response::error(500);
 			}
 
 
