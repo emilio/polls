@@ -15,13 +15,17 @@
 		 * Usar la urls bonitas viene activado por defecto
 		 * Rewrite es para que la aplicación genere las urls sin el index.php/
 		 * En caso de que lo uses, deberás usar en el .htacces algo así:
-		 <IfModule mod_rewrite.c>
-		 	RewriteCond {...}
-		 </IfModule>
-		 */
+			<IfModule mod_rewrite.c>
+				RewriteEngine on
+
+				RewriteCond %{REQUEST_FILENAME} !-f
+				RewriteCond %{REQUEST_FILENAME} !-d
+
+				RewriteRule ^(.*)$ index.php/$1 [L]
+			</IfModule>*/
 		'url' => array(
 			'pretty' => true,
-			'rewrite' => false
+			'rewrite' => true
 		),
 
 		'path' => array(
