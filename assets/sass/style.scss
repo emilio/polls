@@ -1,0 +1,294 @@
+@import "compass";
+@mixin repeating-lg($angle: 45deg, $color1: #aaa, $color2: #ccc, $size: 16px){
+	/* @include background-image(linear-gradient($angle, $color1 0, $color1 25%,
+												$color2 25%, $color2 50%, 
+												$color1 50%, $color1 75%, 
+												$color2 75%, $color2 100%));
+	@include background-size($size $size); */
+	$gradient: repeating-linear-gradient($angle, 
+		$color1,
+		$color1 $size / 2,
+		$color2 $size / 2,
+		$color2 $size);
+	background-image: -webkit-#{$gradient};
+	background-image: -moz-#{$gradient};
+	background-image: -o-#{$gradient};
+	background-image: -ms-#{$gradient};
+	background-image: $gradient;
+};
+%bbox {
+	@include box-sizing(border-box);
+}
+
+
+
+@import url(http://fonts.googleapis.com/css?family=Pontano+Sans);
+body {
+	margin: 0;
+	background: url(../images/light_noise_diagonal.png);
+	font-size: 15px;
+	color: #333;
+	font-family: Pontano Sans, sans-serif;
+}
+a {
+	text-decoration: none;
+	color: darken(#85C4D8, 20%);
+
+	&:hover {
+		border-bottom: 1px dotted;
+	}
+}
+[role="main"] {
+	margin-top: 1em;
+}
+.page-index {
+	.container {
+		width: 900px;
+		max-width: 100%;
+		background: white;
+		margin: 2em auto;
+		padding: 2em;
+		overflow: hidden;
+		border: 1px solid #ccc;
+		@include border-radius(3px);
+	}
+	.main-content {
+		float: left;
+		width: 62%;
+		margin: 0;
+		@extend %bbox;
+	}
+	.main-sidebar {
+		float: right;
+		width: 37%;
+		border-left: 1px solid #ccc;
+		@extend %bbox;
+		padding-left: 1em;
+	}
+}
+.author-module {
+	.module-content {
+		display: table;
+	}
+	img, p {
+		display: table-cell;
+	}
+	img {
+		padding: .5em;
+		background: white;
+		border: 1px solid #ddd;
+		@include box-shadow(0 0 1em rgba(0,0,0,.3));
+		@include transform(rotate(3deg));
+	}
+	p {
+		vertical-align: middle;
+		padding-left: 1em;
+	}
+}
+/*
+ * Encuestas: contenedor
+ */
+ $poll-width: 400px;
+ $gap: 5px;
+.poll {
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+}
+.poll--single {
+	position: relative;
+	width: $poll-width;
+	max-width: 100%;
+	padding: 1em;
+	margin: 0 auto;
+	margin-top: 1em;
+
+	background: #fff;
+	border: 1px solid #cfcfcf;
+	// z-index: 2;
+
+	&,
+	&:before,
+	&:after {
+		@extend %bbox;
+	}
+
+	/*
+	 * Lo comentado sería para hacer los pseudoelementos más anchos en lugar de estrechos
+	 */
+	&:before,
+	&:after {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		height: 100%;
+		max-width: 100%;
+
+		background: inherit;
+		border: inherit;
+		padding: inherit;
+	}
+	&:after {
+		width: $poll-width - ( $gap * 2);
+		top: $gap;
+		left: $gap;
+	}
+	&:before {
+		width: $poll-width - ($gap * 4);
+		top: $gap * 2;
+		left: $gap * 2;
+	}
+}
+.poll__title {
+	font-size: 1em;
+	padding-bottom: 1em;
+	margin: 0;
+	margin-bottom: 1em;
+
+	border-bottom: 1px solid #ccc;
+
+	text-align: center;
+}
+
+.poll__description {
+	text-align: center;
+	font-style: italic;
+	color: #aaa;
+}
+
+.poll__votes {
+	text-align: center;
+	margin-top: 3em;
+}
+/*
+ * Encuestas: puntuación
+ */
+ @mixin pollbar-bg($color) {
+ 	background: darken($color, 40%);
+ 	@include repeating-lg(-45deg, $color, darken($color, 15%), 8px);
+	border: 1px solid mix(darken($color, 40%), #ddd);
+ }
+.poll__answer__bar {
+	@include border-radius(7px);
+	height: 8px;
+
+	// border: 2px solid #aaa;
+	@extend %bbox;
+	@include pollbar-bg(#d1f0a8);
+
+
+	@include box-shadow(
+		inset 0 2px 4px rgba(255, 255, 255, 0.5),
+		inset 0 -1px 3px rgba(0, 0, 0, 0.25),
+		1px 1px 0px rgba(0, 0, 0, 0.1));
+}
+.poll__answer__bar--voted {
+	@include pollbar-bg(#ff9999);
+}
+/*
+ * Encuestas: número de votos
+ */
+.poll__answer__votes {
+	color: #bbb;
+	float: right;
+}
+/*
+ * Botones
+ */
+@mixin ie-linear-gradient($start-color, $end-color) {
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#{$start-color}', endColorstr='#{$end-color}');
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$start-color}', endColorstr='#{$end-color}')";
+}
+
+@mixin boton($base-color: #7fbf4d){
+	display: inline-block;
+	cursor: pointer;
+	@include box-shadow(0 0 .2em rgba(black, .2), inset 0 1px 1px rgba(white, .6));
+
+	@include border-radius(1em);
+	padding: .3em 1em;
+	margin: 0;
+
+	$text-color: lighten($base-color, 35%);
+	$light-text: true;
+	@if (lightness($base-color) > 70%) {
+		$text-color: #444;
+		$light-text: false;
+	}
+
+	color: $text-color;
+	border: 1px solid darken($base-color, 10%);
+	background: $base-color;
+	@include background-image(linear-gradient($base-color, darken($base-color, 10%)));
+	.lt-ie9 & {
+		zoom: 1;
+		@include ie-linear-gradient($base-color, darken($base-color, 10%));
+	}
+	.lt-ie8 & {
+		display: inline;
+	}
+
+	&:hover {
+		@if $light-text  {
+			background: darken($base-color, 10%)
+		}
+		@else {
+			background: $base-color
+		}
+			// color: darken($base-color, 20%)
+	}
+	&:active {
+		@include box-shadow(inset 0 0 .3em rgba(black, .2));
+	}
+
+}
+.button {
+	@include boton(#85C4D8);
+}
+.vote {
+	text-align: right;
+}
+.view {
+	float: left;
+}
+/*
+ * Mensaje
+ */
+.message {
+	display: block;
+	padding: .5em 1em;
+	@extend %bbox;
+	margin: 1em auto;
+	text-align: center;
+
+	// color: black;
+	// font-weight: bold;
+
+	width: $poll-width;
+	max-width: 100%;
+	@include border-radius(4px);
+}
+@mixin message($color) {
+	border: 1px solid $color;
+	background: lighten($color, 10%);
+	@include background-image(linear-gradient(lighten($color, 15%), lighten($color, 10%)));
+}
+.message--success {
+	@include message(#d1f0a8);
+}
+.message--error {
+	@include message(#ff9999);
+}
+
+.site-footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	background: white;
+	padding: 1em;
+	border-top: 1px solid #CCC;
+}

@@ -1,0 +1,8 @@
+/*
+ * 8 líneas de CSS para toda la página... da gusto con bootstrap ;)
+ */
+.admin-footer {
+	border-top: 1px solid #CCC;
+	margin-top: 20px;
+	padding-top: 20px;
+}

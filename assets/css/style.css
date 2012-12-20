@@ -1,0 +1,321 @@
+@import url(http://fonts.googleapis.com/css?family=Pontano+Sans);
+/* line 19, ../sass/style.scss */
+.page-index .main-content, .page-index .main-sidebar, .poll--single, .poll--single:before, .poll--single:after, .poll__answer__bar, .message {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 26, ../sass/style.scss */
+body {
+  margin: 0;
+  background: url(../images/light_noise_diagonal.png);
+  font-size: 15px;
+  color: #333;
+  font-family: Pontano Sans, sans-serif;
+}
+
+/* line 33, ../sass/style.scss */
+a {
+  text-decoration: none;
+  color: #3c9cbb;
+}
+/* line 37, ../sass/style.scss */
+a:hover {
+  border-bottom: 1px dotted;
+}
+
+/* line 41, ../sass/style.scss */
+[role="main"] {
+  margin-top: 1em;
+}
+
+/* line 45, ../sass/style.scss */
+.page-index .container {
+  width: 900px;
+  max-width: 100%;
+  background: white;
+  margin: 2em auto;
+  padding: 2em;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+/* line 55, ../sass/style.scss */
+.page-index .main-content {
+  float: left;
+  width: 62%;
+  margin: 0;
+}
+/* line 61, ../sass/style.scss */
+.page-index .main-sidebar {
+  float: right;
+  width: 37%;
+  border-left: 1px solid #ccc;
+  padding-left: 1em;
+}
+
+/* line 70, ../sass/style.scss */
+.author-module .module-content {
+  display: table;
+}
+/* line 73, ../sass/style.scss */
+.author-module img, .author-module p {
+  display: table-cell;
+}
+/* line 76, ../sass/style.scss */
+.author-module img {
+  padding: .5em;
+  background: white;
+  border: 1px solid #ddd;
+  -webkit-box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  -webkit-transform: rotate(3deg);
+  -moz-transform: rotate(3deg);
+  -ms-transform: rotate(3deg);
+  -o-transform: rotate(3deg);
+  transform: rotate(3deg);
+}
+/* line 83, ../sass/style.scss */
+.author-module p {
+  vertical-align: middle;
+  padding-left: 1em;
+}
+
+/*
+ * Encuestas: contenedor
+ */
+/* line 94, ../sass/style.scss */
+.poll ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 100, ../sass/style.scss */
+.poll--single {
+  position: relative;
+  width: 400px;
+  max-width: 100%;
+  padding: 1em;
+  margin: 0 auto;
+  margin-top: 1em;
+  background: #fff;
+  border: 1px solid #cfcfcf;
+  /*
+   * Lo comentado sería para hacer los pseudoelementos más anchos en lugar de estrechos
+   */
+}
+/* line 122, ../sass/style.scss */
+.poll--single:before, .poll--single:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  max-width: 100%;
+  background: inherit;
+  border: inherit;
+  padding: inherit;
+}
+/* line 133, ../sass/style.scss */
+.poll--single:after {
+  width: 390px;
+  top: 5px;
+  left: 5px;
+}
+/* line 138, ../sass/style.scss */
+.poll--single:before {
+  width: 380px;
+  top: 10px;
+  left: 10px;
+}
+
+/* line 144, ../sass/style.scss */
+.poll__title {
+  font-size: 1em;
+  padding-bottom: 1em;
+  margin: 0;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+/* line 155, ../sass/style.scss */
+.poll__description {
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+}
+
+/* line 161, ../sass/style.scss */
+.poll__votes {
+  text-align: center;
+  margin-top: 3em;
+}
+
+/*
+ * Encuestas: puntuación
+ */
+/* line 173, ../sass/style.scss */
+.poll__answer__bar {
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  -ms-border-radius: 7px;
+  -o-border-radius: 7px;
+  border-radius: 7px;
+  height: 8px;
+  background: #70ae1e;
+  /* @include background-image(linear-gradient($angle, $color1 0, $color1 25%,
+  											$color2 25%, $color2 50%, 
+  											$color1 50%, $color1 75%, 
+  											$color2 75%, $color2 100%));
+  @include background-size($size $size); */
+  background-image: -webkit-repeating-linear-gradient(-45deg, #d1f0a8, #d1f0a8 4px, #aee567 4px, #aee567 8px);
+  background-image: -moz-repeating-linear-gradient(-45deg, #d1f0a8, #d1f0a8 4px, #aee567 4px, #aee567 8px);
+  background-image: -o-repeating-linear-gradient(-45deg, #d1f0a8, #d1f0a8 4px, #aee567 4px, #aee567 8px);
+  background-image: -ms-repeating-linear-gradient(-45deg, #d1f0a8, #d1f0a8 4px, #aee567 4px, #aee567 8px);
+  background-image: repeating-linear-gradient(-45deg, #d1f0a8, #d1f0a8 4px, #aee567 4px, #aee567 8px);
+  border: 1px solid #a6c57d;
+  -webkit-box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -1px 3px rgba(0, 0, 0, 0.25), 1px 1px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -1px 3px rgba(0, 0, 0, 0.25), 1px 1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -1px 3px rgba(0, 0, 0, 0.25), 1px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* line 187, ../sass/style.scss */
+.poll__answer__bar--voted {
+  background: #cc0000;
+  /* @include background-image(linear-gradient($angle, $color1 0, $color1 25%,
+  											$color2 25%, $color2 50%, 
+  											$color1 50%, $color1 75%, 
+  											$color2 75%, $color2 100%));
+  @include background-size($size $size); */
+  background-image: -webkit-repeating-linear-gradient(-45deg, #ff9999, #ff9999 4px, #ff4d4d 4px, #ff4d4d 8px);
+  background-image: -moz-repeating-linear-gradient(-45deg, #ff9999, #ff9999 4px, #ff4d4d 4px, #ff4d4d 8px);
+  background-image: -o-repeating-linear-gradient(-45deg, #ff9999, #ff9999 4px, #ff4d4d 4px, #ff4d4d 8px);
+  background-image: -ms-repeating-linear-gradient(-45deg, #ff9999, #ff9999 4px, #ff4d4d 4px, #ff4d4d 8px);
+  background-image: repeating-linear-gradient(-45deg, #ff9999, #ff9999 4px, #ff4d4d 4px, #ff4d4d 8px);
+  border: 1px solid #d46e6e;
+}
+
+/*
+ * Encuestas: número de votos
+ */
+/* line 193, ../sass/style.scss */
+.poll__answer__votes {
+  color: #bbb;
+  float: right;
+}
+
+/*
+ * Botones
+ */
+/* line 247, ../sass/style.scss */
+.button {
+  display: inline-block;
+  cursor: pointer;
+  -webkit-box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  -moz-box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0.2em rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  -ms-border-radius: 1em;
+  -o-border-radius: 1em;
+  border-radius: 1em;
+  padding: .3em 1em;
+  margin: 0;
+  color: white;
+  border: 1px solid #5eb1cc;
+  background: #85c4d8;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #85c4d8), color-stop(100%, #5eb1cc));
+  background-image: -webkit-linear-gradient(#85c4d8, #5eb1cc);
+  background-image: -moz-linear-gradient(#85c4d8, #5eb1cc);
+  background-image: -o-linear-gradient(#85c4d8, #5eb1cc);
+  background-image: linear-gradient(#85c4d8, #5eb1cc);
+}
+/* line 225, ../sass/style.scss */
+.lt-ie9 .button {
+  zoom: 1;
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr='#85c4d8', endColorstr='#5eb1cc');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#85c4d8', endColorstr='#5eb1cc')";
+}
+/* line 229, ../sass/style.scss */
+.lt-ie8 .button {
+  display: inline;
+}
+/* line 233, ../sass/style.scss */
+.button:hover {
+  background: #5eb1cc;
+}
+/* line 242, ../sass/style.scss */
+.button:active {
+  -webkit-box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.2);
+}
+
+/* line 250, ../sass/style.scss */
+.vote {
+  text-align: right;
+}
+
+/* line 253, ../sass/style.scss */
+.view {
+  float: left;
+}
+
+/*
+ * Mensaje
+ */
+/* line 259, ../sass/style.scss */
+.message {
+  display: block;
+  padding: .5em 1em;
+  margin: 1em auto;
+  text-align: center;
+  width: 400px;
+  max-width: 100%;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+
+/* line 278, ../sass/style.scss */
+.message--success {
+  border: 1px solid #d1f0a8;
+  background: #e8f7d4;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f3fbe9), color-stop(100%, #e8f7d4));
+  background-image: -webkit-linear-gradient(#f3fbe9, #e8f7d4);
+  background-image: -moz-linear-gradient(#f3fbe9, #e8f7d4);
+  background-image: -o-linear-gradient(#f3fbe9, #e8f7d4);
+  background-image: linear-gradient(#f3fbe9, #e8f7d4);
+}
+
+/* line 281, ../sass/style.scss */
+.message--error {
+  border: 1px solid #ff9999;
+  background: #ffcccc;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffe5e5), color-stop(100%, #ffcccc));
+  background-image: -webkit-linear-gradient(#ffe5e5, #ffcccc);
+  background-image: -moz-linear-gradient(#ffe5e5, #ffcccc);
+  background-image: -o-linear-gradient(#ffe5e5, #ffcccc);
+  background-image: linear-gradient(#ffe5e5, #ffcccc);
+}
+
+/* line 285, ../sass/style.scss */
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background: white;
+  padding: 1em;
+  border-top: 1px solid #CCC;
+}
