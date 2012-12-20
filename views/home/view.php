@@ -47,9 +47,8 @@
 	</li>
 	<?php endforeach; ?>
 	<p class="poll__votes">Votos totales: <?= $poll->total_votes ?></p>
-	<?php if( ! $voted_answer ): ?>
-		<a class="vote" href="<?= Url::get('vote', $poll->id) ?>" title="Votar">Votar</a>
-	<?php endif; ?>
+	<a class="button button--vote" href="<?= Url::get('vote', $poll->id) ?>" title="Votar">Votar</a>
+
 	<a href="<?php echo Url::get() ?>">Volver al inicio</a>
 	<?php if( IS_ADMIN ): ?>
 		<a class="edit" href="<?= Url::get('admin@edit', $poll->id); ?>">Editar la encuesta</a>
