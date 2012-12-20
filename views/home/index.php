@@ -31,8 +31,8 @@
 	</div>
 	<div class="aside-module how-module">
 		<h2 class="aside-module-title">¿Cómo funciona?</h2>
-		<div class="module-content" itemscope itemtype="http://schema.org/Person">
-			<p>Puedes ver la explicación <a href="//emiliocobos.net" title="Crear encuestas con PHP y MySQL">aquí</a>. Es fácilmente customizable, y el código es perfectamente entendible.</p>
+		<div class="module-content">
+			<p>Puedes ver la explicación <a href="http://emiliocobos.net/encuestas-php-mysq/" title="Crear encuestas con PHP y MySQL">aquí</a>. Es fácilmente customizable, y el código es perfectamente entendible.</p>
 		</div>
 	</div>
 </aside>
