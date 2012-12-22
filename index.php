@@ -5,7 +5,6 @@
 
 	// Definir los directorios
 	define('BASE_PATH', dirname(__FILE__) . '/');
-	define('BASE_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
 
 

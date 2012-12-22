@@ -17,14 +17,14 @@ class Url {
 			if( ! Config::get('url.rewrite')) {
 				$url .= 'index.php/';
 			}
-			if( $controller ) {
+			if( $controller && $controller !== 'home') {
 				$url .= $controller . '/';
-				if( $action ) {
-					$url .= $action . '/';
-				}
-				if( $params ) {
-					$url .= implode('/', $params) . '/';
-				}
+			}
+			if( $action && $action !== 'index') {
+				$url .= $action . '/';
+			}
+			if( $params ) {
+				$url .= implode('/', $params) . '/';
 			}
 		} else {
 			if( $controller ) {
@@ -49,5 +49,4 @@ class Url {
 	public function current() {
 		return CURRENT_URL;
 	}
-
 }
