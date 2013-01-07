@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS `polls` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `question` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `question` varchar(255) NOT NULL,
   `various_answers` tinyint(1) NOT NULL DEFAULT '0',
   `total_votes` bigint(20) NOT NULL DEFAULT '0',
-  `slug` varchar(200) CHARACTER SET latin1 NOT NULL,
-  `description` text CHARACTER SET latin1 NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `description` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ;
 
