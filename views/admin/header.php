@@ -40,7 +40,6 @@
 
 	<meta name="robots" content="noindex, nofollow">
 
-
 	<link rel="stylesheet" href="<?php echo Url::asset('admin/css/bootstrap.css' ); ?>">
 	<link rel="stylesheet" href="<?php echo Url::asset('admin/css/style.css' ); ?>">
 	<script src="<?php echo Url::asset('admin/js/modernizr.js' ); ?>"></script>
@@ -48,7 +47,7 @@
 <body>
 	<div class="navbar">
 		<div class="navbar-inner">
-			<a class="brand" href="<?php echo $_SERVER['PHP_SELF'] ?>">Administración</a>
+			<a class="brand" href="<?php echo Url::get('admin') ?>">Administración</a>
 			<ul class="nav">
 				<li><a href="<?php echo Url::get() ?>" title="volver al inicio">Inicio</a></li>
 				<?php if( IS_ADMIN ): ?>
