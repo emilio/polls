@@ -1,5 +1,4 @@
 <?php
-	global $poll, $answers;
 	$poll->total_votes = intval($poll->total_votes, 10);
 	$voted_answer = Cookie::get('p_' . $poll->id . '_v');
 	if( ! $voted_answer ) {
@@ -26,10 +25,10 @@
 	</div>
 <?php endif; ?>
 
-<div class="poll poll--single poll--view poll-<?= $poll->id ?>" id="poll-<?= $poll->id ?>">
-	<h2 class="poll__title"><?= $poll->question ?></h2>
+<div class="poll poll--single poll--view poll-<?php echo $poll->id ?>" id="poll-<?php echo $poll->id ?>">
+	<h2 class="poll__title"><?php echo $poll->question ?></h2>
 	<?php if( $poll->description ): ?>
-		<p class="poll__description"><?= $poll->description ?></p>
+		<p class="poll__description"><?php echo $poll->description ?></p>
 	<?php endif; ?>
 	<ul>
 	<?php foreach ($answers as $answer): 
@@ -41,13 +40,13 @@
 
 		$is_voted = $voted_answer == $answer->id;
 	?>
-	<li class="poll__answer poll__answer--view answer-<?= $answer->id ?>">
-		<p><?= $answer->text ?> <span class="poll__answer__votes"><?= $answer->votes ?> votos</span></p>
+	<li class="poll__answer poll__answer--view answer-<?php echo $answer->id ?>">
+		<p><?php echo $answer->text ?> <span class="poll__answer__votes"><?php echo $answer->votes ?> votos</span></p>
 		<div class="poll__answer__bar<?php if($is_voted) echo " poll__answer__bar--voted";?>" data-percent="<?php echo $percentage ?>" style="width: <?php echo $percentage ?>%"></div>
 	</li>
 	<?php endforeach; ?>
-	<p class="poll__votes">Votos totales: <?= $poll->total_votes ?></p>
-	<a class="button button--vote" href="<?= Url::get('vote', $poll->id) ?>" title="Votar">Votar</a>
+	<p class="poll__votes">Votos totales: <?php echo $poll->total_votes ?></p>
+	<a class="button button--vote" href="<?php echo Url::get('vote', $poll->id) ?>" title="Votar">Votar</a>
 
 	<a href="<?php echo Url::get() ?>">Volver al inicio</a>
 	<?php if( IS_ADMIN ): ?>

@@ -1,5 +1,4 @@
 <?php
-	global $poll;
 	$canonical_url = Url::current();
 	switch (PAGE_ACTION) {
 		case 'index':

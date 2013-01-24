@@ -1,27 +1,28 @@
 <?php
 class Home_Controller {
-	public function action_index() {
-		$GLOBALS['polls'] = Poll::all();
-		View::make('home.index');
+	public static function action_index() {
+		return View::make('home.index')
+			->add_var('polls', Poll::all());
 	}
 
-	public function action_view($slug = null){
+	public static function action_view($slug = null){
 		if( ! $slug ) {
 			return Redirect::to(Url::get(), 301);
 		}
 		
-		if( ! $poll = $GLOBALS['poll'] = Poll::where('slug', '=', $slug)->first() ) {
+		if( ! $poll = Poll::where('slug', '=', $slug)->first() ) {
 			return Response::error(404);
 		}
-		$GLOBALS['answers'] = Answer::where('poll_id', '=', $poll->id)->get();
 
-		View::make('home.view');
+		return View::make('home.view')
+			->add_var('poll', $poll)
+			->add_var('answers', Answer::where('poll_id', '=', $poll->id)->get());
 	}
 
-	public function action_vote($id = null){
+	public static function action_vote($id = null){
 		if( ! $id ) {
 			if( $_SERVER['REQUEST_METHOD'] !== 'POST') {
-				return View::make('error.404');
+				return Response::error(404);
 			} else {
 				$id = (int) Param::post('id');
 				$answers = Param::post('answers');
@@ -57,16 +58,19 @@ class Home_Controller {
 				Redirect::to(Url::get('view', $poll->slug, 'voted=true'));
 			}
 		} elseif ( ! is_numeric($id) ) {
-			return View::make('error.404');
+			return Response::error(404);
 		}
 
 		$id = intval($id, 10);
 
-		if( ! $poll = $GLOBALS['poll'] = Poll::get($id) ) {
+		if( ! $poll = Poll::get($id) ) {
 			return Response::error(404);
 		}
-		$GLOBALS['answers'] = Answer::where('poll_id', '=', $poll->id)->get();
 
-		View::make('vote');
+		$answers = Answer::where('poll_id', '=', $poll->id)->get();
+		
+		return View::make('vote')
+			->add_var('poll', $poll)
+			->add_var('answers', $answers);
 	}
 }

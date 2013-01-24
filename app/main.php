@@ -1,22 +1,30 @@
 <?php
-// Definir la url base
-define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
 
-// Configurar el cargado automático de clases
-spl_autoload_register(function($name) {
-	if( file_exists($file = Config::get('path.includes') . $name . '.php') ) {
-		include $file;
-	} elseif (file_exists($file = Config::get('path.models') . strtolower($name) . '.php' ) ) {
-		include $file;
-	}
-});
 
+if( defined('DEVELOPEMENT_MODE') && DEVELOPEMENT_MODE ) {
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+}
+
+/*
+ * Definir la url base
+ */
+if( '/' === DIRECTORY_SEPARATOR ) {
+	define('BASE_ABSOLUTE_URL', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH));
+} else {
+	define('BASE_ABSOLUTE_URL', str_replace(DIRECTORY_SEPARATOR, '/', str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE_PATH)));
+}
+define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . BASE_ABSOLUTE_URL);
 
 if( Config::get('url.pretty') ) {
-	$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
+	$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/' . str_replace(array(
+																BASE_ABSOLUTE_URL,
+																(isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : null)
+															), '', $_SERVER['REQUEST_URI']);
+
 	if( is_null($path) ){
 		if( ! Config::get('url.rewrite')) {
-			Redirect::to( Url::get(), 301 );
+			return Redirect::to( Url::get(), 301 );
 		} else {
 			$path = '/';
 		}
@@ -81,21 +89,43 @@ if( file_exists($controller_path . $controller . '.php') ) {
 		$action = $controller;
 		$controller = 'home';
 	} else {
-		header("HTTP/1.1 404 Not Found");
-		View::make('error.404');
-		exit;
+		if( $action !== 'index' ) {
+			$args = array($controller, $action);
+		} else {
+			$args = array($controller);
+		}
+		$controller = 'home';
+		$action = 'index';
 	}
 }
 unset($controller_path);
 
 
-
 if( method_exists($class, 'action_' . $action) ) {
+	$reflection = new ReflectionMethod($class, 'action_' . $action);
+	$number_of_arguments = count($args);
+
+	// Si hay más argumentos de los esperados o menos de los requeridos, lanzamos un error 404
+	if( $number_of_arguments > $reflection->getNumberOfParameters() || $number_of_arguments < $reflection->getNumberOfRequiredParameters()) {
+		return Response::error(404)->render(true);
+	}
+
+	// Si no, lanzamos la aplicación
 	define('PAGE_CONTROLLER', $controller);
 	define('PAGE_ACTION', $action);
-	
-	call_user_func_array(array($class, 'action_' . $action), $args);
+
+	// Opcional una función global
+	if( method_exists($class, 'all') ) {
+		call_user_func(array($class, 'all'));
+	}
+
+	$return = call_user_func_array(array($class, 'action_' . $action), $args);
+
+	if( $return instanceof View ) {
+		return $return->render(true);
+	}
+
+	echo $return;
 } else {
-	header("HTTP/1.1 404 Not Found");
-	View::make('error.404');
+	return Response::error(404)->render(true);
 };

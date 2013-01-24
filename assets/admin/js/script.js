@@ -18,18 +18,19 @@
 		}
 		e.preventDefault();
 		$.ajax({
-			"url": window.adminAjaxUrl,
-			"type": "POST",
-			"data": {
+			url: window.adminAjaxUrl,
+			type: "POST",
+			data: {
 				"answer_id": this.getAttribute('data-answer-id')
+			},
+			success: function() {
+				el.parent().remove()
 			}
-		}).done(function() {
-			el.parent().remove()
 		});
-		el.parent().fadeIn(600)
+		el.parent().fadeOut(600)
 	});
 
-	$('.delete-new-answer').live('click', function(){
+	$('.delete-new-answer').live('click', function(e){
 		$(this).parent().remove()
 		e.preventDefault();
 	})

@@ -1,4 +1,3 @@
-<?php global $poll, $answers; ?>
 <div class="row">
 	<div class="span8 offset2">
 <h2>Editar la encuesta: "<?=$poll->question?>"</h2>

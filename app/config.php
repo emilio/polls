@@ -13,17 +13,29 @@ class Config {
 
 
 		// Conectamos con la base de datos
-		DB::config('driver', self::get('database.driver'));	
-		DB::config('user', self::get('database.user'));
-		DB::config('password', self::get('database.password'));
-		DB::config('dbname', self::get('database.dbname'));
+		DB::config(self::get('database'));
 		DB::connect();
 
 		// Definimos algunas constantes importantes
-		foreach (array( 'includes', 'models', 'controllers', 'views', 'assets')  as $path) {
+		foreach (array( 'cache','includes', 'models', 'controllers', 'views', 'assets')  as $path) {
 			self::$config['path'][$path . '_orig'] = self::$config['path'][$path];
 			self::$config['path'][$path] = BASE_PATH . self::get('path.' . $path) . '/';
 		}
+
+		// Cargar los modelos automáticamente
+		foreach (glob(self::get('path.models') . '*.php', GLOB_NOSORT) as $file) {
+			include $file;
+		}
+		
+		// Configurar el cargado automático de clases
+		spl_autoload_register(function($name) {
+			require (Config::get('path.includes') . $name . '.php');
+		});
+
+		Cache::configure(array(
+			'cache_path' => self::get('path.cache'),
+			'expires' => self::get('cache.expires')
+		));
 
 	}
 	public static function get($key) {

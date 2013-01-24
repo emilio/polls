@@ -1,4 +1,3 @@
-<?php global $polls; ?>
 <section role="main" class="main-content">
 	<h2>Todas las encuestas</h2>
 	<ul>

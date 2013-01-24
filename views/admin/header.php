@@ -1,5 +1,4 @@
 <?php 
-	global $poll;
  	switch( PAGE_ACTION ) {
 		case 'edit':
 			$title = "Editar la encuesta: $poll->question";

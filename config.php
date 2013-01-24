@@ -31,11 +31,15 @@
 		'path' => array(
 			'includes' => 'includes',
 			'models' => 'models',
+			'cache' => 'cache',
 			'controllers' => 'controllers',
 			'views' => 'views',
 			'assets' => 'assets'
 		),
 
+		'cache' => array(
+			'expires' => 3, // Expiración en días de los items de la caché
+		),
 		/*
 		 * Configuración extra aquí
 		 */

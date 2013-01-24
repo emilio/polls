@@ -7,17 +7,19 @@
 	class DB {
 		// Conection drivers for the pdo
 		// Configuration via DB::config
-		private static $driver = 'mysql';
-		private static $dbname = '';
-		private static $host = 'localhost';
-		private static $user = '';
-		private static $password = '';
+		private static $config = array(
+			'driver' => 'mysql',
+			'host' => 'localhost',
+			'dbname' => '',
+			'user' => '',
+			'password' => ''
+		);
 
 		// The pdo instance
 		public static $db;
 
 		// Allowed operators for where queries
-		public static $allowed_operators = array('=', '!=', '>', '<', 'IN', 'in', 'LIKE', 'like'); // In allows searching for different values: Users::where('id', 'IN', '1,2,3,4');
+		public static $allowed_operators = array('=', '!=', '>', '<', '<=', '>=', 'BETWEEN', 'NOT BETWEEN', 'IN', 'NOT IN', 'LIKE', 'NOT LIKE'); // In allows searching for different values: Users::where('id', 'IN', '1,2,3,4');
 
 		public static $allowed_relations = array('WHERE', 'OR', 'AND');
 		public static $allowed_orders = array('DESC', 'ASC');
@@ -26,34 +28,22 @@
 		 * @param string $option the option to be configured
 		 * @param string $value the value for the database
 		 */
-		public function config($option, $value = '')
+		public static function config($option, $value = '')
 		{
-			switch( $option )
-			{
-				case 'host':
-					self::$host = $value;
-					break;
-				case 'dbname':
-					self::$dbname = $value;
-					break;
-				case 'user':
-					self::$user = $value;
-					break;
-				case 'password':
-					self::$password = $value;
-					break;
-				case 'driver':
-					self::$driver = $value;
-					break;
+			if( is_array($option) ) {
+				static::$config = array_merge(static::$config, $option);
+			} else {
+				static::$config[$option] = $value;
 			}
 		}
 
 		/*
 		 * Connect to the database after configuration
 		 */
-		public function connect()
+		public static function connect()
 		{
-			self::$db = new PDO(self::$driver . ':host=' . self::$host . ';dbname=' . self::$dbname, self::$user, self::$password);
+			$config = static::$config;
+			self::$db = new PDO($config['driver'] . ':host=' . $config['host'] . ';dbname=' . $config['dbname'], $config['user'], $config['password']);
 			self::$db->query("SET NAMES 'utf8'");
 		}
 
@@ -62,9 +52,9 @@
 		 * @param string $table the table where the row is going to be inserted
 		 * @param array $arguments the field=>value of the new row
 		 */
-		public function create($table, $arguments)
+		public static function create($table, $arguments)
 		{
-			$sql = 'INSERT INTO ' . $table . ' (';
+			$sql = 'INSERT INTO `' . $table . '` (';
 			$fields = array();
 			$values = array();
 			foreach ($arguments as $field => $value) {
@@ -76,7 +66,6 @@
 			$sql .= ':' . implode(', :', $fields) . ')';
 		
 			$statement = self::$db->prepare($sql);
-
 			try {
 				$statement->execute($values);
 				return self::$db->lastInsertId();
@@ -95,7 +84,7 @@
 		 * @param string $operator an operator in self::$allowed_operators
 		 * @param mixed $value the value to look for
 		 */
-		public function select($table, $where_field = null, $columns = '*') {
+		public static function select($table, $where_field = null, $columns = '*') {
 			$fields = null;
 			$has_where_query = ! is_null($where_field);
 			$sql = "SELECT $columns FROM `$table`";
@@ -109,13 +98,23 @@
 
 			$statement->execute($fields);
 
-			if( ! strpos($columns, 'COUNT') ) {
-				return $statement->fetchAll(PDO::FETCH_CLASS, 'stdClass');
-			} else {
-				return intval($statement->fetchColumn(), 10);
+			switch (substr($columns, 0, 4)) {
+				case 'COUN':
+				case 'MAX(':
+				case 'MIN(':
+					return intval($statement->fetchColumn(), 10);
+				break;
+				
+				default:
+					return $statement->fetchAll(PDO::FETCH_CLASS, 'stdClass');
 			}
+		}
 
-			return $results;
+		/*
+		 * Permitir seleccionar de una tabla estática
+		 */
+		public static function from_table($table) {
+			return new Query($table);
 		}
 
 		/*
@@ -125,8 +124,10 @@
 		 *    array('AND', 'ip', '=', '173.26.0.1')
 		 * )
 		 */
-		private function make_where_querie($args = array(), $sql = ''){
+		private static function make_where_querie($args = array(), $sql = ''){
 			$count = 0;
+			$prepared_fields = 0;
+			$base_placeholder = 'prepared_field_';
 			$values = array();
 			$limit = null;
 			$orderby = null;
@@ -179,11 +180,36 @@
 				}
 
 				list($field, $operator, $value) = $where_querie;
+				$operator = strtoupper($operator);
 				if( ! in_array($operator, self::$allowed_operators) ) {
 					throw new Exception("Error al procesar la solicitud", 1);
 				}
-				$sql .= " $relation `$field`$operator:$field";
-				$values[':' . $field] = $value;
+				if( $operator === 'IN' || $operator === 'NOT IN' ) {
+					if( ! is_array($value) ) {
+						$value = explode(',', $value);
+					}
+
+					$sql .= " $relation `$field` $operator(";
+					$in_fields_count = 0;
+					foreach ($value as $in_value) {
+						$field_placeholder = ':' . $base_placeholder . $prepared_fields++;
+						if( $in_fields_count !== 0 ) {
+							$sql .= ',';
+						}
+						$sql.= $field_placeholder;
+						$values[$field_placeholder] = $in_value;
+						$prepared_fields++;
+						$in_fields_count ++;
+					}
+					$sql .= ')';
+				} elseif ($operator === 'BETWEEN' || $operator === 'NOT BETWEEN'){
+					$sql .= "$relation `$field` $operator :$base_placeholder" . $prepared_fields . " AND :$base_placeholder" . ($prepared_fields + 1);
+					$values[':' . $base_placeholder . $prepared_fields++] = $value[0];
+					$values[':' . $base_placeholder . $prepared_fields++] = $value[1];
+				} else {
+					$sql .= " $relation `$field` $operator :$base_placeholder" . $prepared_fields;
+					$values[':' . $base_placeholder . $prepared_fields++] = $value;
+				}
 			}
 			if( $orderby ) {
 				if( in_array($orderby[1], self::$allowed_orders) ) {
@@ -193,6 +219,7 @@
 			if( $limit ) {
 				$sql .= sprintf(" LIMIT %d, %d", $limit[0], $limit[1]);
 			}
+
 			return array($sql, $values);
 		}
 		/*
@@ -217,7 +244,7 @@
 		 * 
 		 * Because you've used 1 query instead of 2
 		 */
-		public function edit($table, $id_field, $data, $where_clauses) {
+		public static function edit($table, $id_field, $data, $where_clauses) {
 			$sql = "UPDATE `$table` SET ";
 			$params = array();
 
@@ -260,7 +287,7 @@
 		 * @param string $table
 		 * @param int $id id of the row
 		 */
-		public function delete($table, $where_clauses)
+		public static function delete($table, $where_clauses)
 		{
 			$sql = "DELETE FROM `$table`";
 
@@ -268,18 +295,14 @@
 
 			$statement = self::$db->prepare($sql);
 
-
-
-
 			return $statement->execute($fields);
 		}
 
 		/*
 		 * Count the items in the DB
 		 */
-		public function count($table, $field) {
+		public static function count($table, $field) {
 			$rows = self::$db->query("SELECT COUNT($field) FROM `$table`")->fetchColumn();
 			return intval($rows, 10);
 		}
-
 	}

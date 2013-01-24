@@ -1,12 +1,12 @@
 <?php
 	class Admin_Controller {
-		public function action_index() {
+		public static function action_index() {
 			if( ! IS_ADMIN ) {
 				Redirect::to(Url::get('admin@login', null, 'redirect-to=' . urlencode(Url::current())));
 			}
-			View::make('admin');
+			return View::make('admin');
 		}
-		public function action_login() {
+		public static function action_login() {
 			if( IS_ADMIN ) {
 				if( Param::request('redirect-to') ) {
 					Redirect::to(Param::request('redirect-to'));
@@ -27,19 +27,19 @@
 					$login_error = true;
 				}
 			}
-			View::make('admin.login');
+			return View::make('admin.login');
 		}
-		public function action_logout() {
+		public static function action_logout() {
 			$_SESSION = array();
 			session_destroy();
 			Redirect::to(Url::get('admin@login', null, 'loggedout=true'));
 		}
 
-		public function action_password() {
-			View::make('admin.password');
+		public static function action_password() {
+			return View::make('admin.password');
 		}
 
-		public function action_new($id = null) {
+		public static function action_new($id = null) {
 			if( $id ) {
 					return Response::error(404);
 			}
@@ -70,9 +70,9 @@
 
 				Redirect::to(Url::get('admin', null, 'success=' . $poll_id . '&created=true'));
 			}
-			View::make('admin.new');
+			return View::make('admin.new');
 		}
-		public function action_edit($id = null) {
+		public static function action_edit($id = null) {
 			if( ! IS_ADMIN ) {
 				Redirect::to(Url::get('admin@login', null, 'redirect-to=' . urlencode(Url::current()) ));
 			}
@@ -148,11 +148,13 @@
 					}
 				}
 			}
-			if( ! $id || ! is_numeric($id) || ! $poll = $GLOBALS['poll'] = Poll::get((int) $id)) {
+			if( ! $id || ! is_numeric($id) || ! $poll = Poll::get((int) $id)) {
 				return Response::error(404);
 			} else {
-				$GLOBALS['answers'] = Answer::where('poll_id', '=', $poll->id)->get();
-				View::make('admin.edit');
+				$answers = Answer::where('poll_id', '=', $poll->id)->get();
+				return View::make('admin.edit')
+					->add_var('answers', $answers)
+					->add_var('poll', $poll);
 			}
 		}
 	}

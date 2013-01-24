@@ -30,7 +30,7 @@
 		 * @param int $id the id to retrieve
 		 * @return Query
 		 */
-		public function find($id = 0)
+		public static function find($id = 0)
 		{
 			return self::where(static::$id_field, '=', $id);
 		}
@@ -41,7 +41,7 @@
 		 * @param int $id the id to retrieve
 		 * @return StdClass
 		 */
-		public function get($id = 0)
+		public static function get($id = 0)
 		{
 			if( $id === 0 ) {
 				return self::all();
@@ -54,8 +54,24 @@
 		 * Get the total number of rows
 		 * @return int
 		 */
-		public function count($field = '*') {
+		public static function count($field = '*') {
 			return DB::count(static::$table, $field);
+		}
+
+		/*
+		 * Get the max value of something
+		 * @return int
+		 */
+		public static function max($field) {
+			return self::query()->max($field);
+		}
+
+		/*
+		 * Get the min value of something
+		 * @return int
+		 */
+		public static function min($field) {
+			return self::query()->min($field);
 		}
 
 		/*
@@ -65,7 +81,7 @@
 		 * $users = User::query()->order_by('created_at', 'DESC')->limit(5)->get();
 		 * @return int
 		 */
-		public function query() {
+		public static function query() {
 			return new Query(static::$table, static::$id_field);
 		}
 		
@@ -76,7 +92,7 @@
 		 * @param mixed $value value to look for
 		 * @return array
 		 */
-		public function where($field = null, $operator = null, $value = null)
+		public static function where($field = null, $operator = null, $value = null)
 		{
 			return self::query()->and_where($field, $operator, $value);
 		}
@@ -85,20 +101,20 @@
 		 * Select all data in that table
 		 * @return array
 		 */
-		public function all() {
+		public static function all() {
 			return DB::select(static::$table);
 		}
-		
+
 		/*
 		 * Create a row with the fields named in $args
 		 * @param array|StdClass $args the fields and values to insert the database
 		 */
-		public function create($args)
+		public static function create($args)
 		{
 			return DB::create(static::$table, $args);
 		}
 
-		private function get_id($obj) {
+		private static function get_id($obj) {
 			if( is_object($obj) ) {
 				$obj = $obj->{static::$id_field};
 			} else if ( is_array($obj) ) {
@@ -123,7 +139,7 @@
 		 * Save a database object
 		 * @param StdClass $obj object retrieved from the database before
 		 */
-		public function save($obj) {
+		public static function save($obj) {
 			$id = self::get_id($obj);
 			
 			return DB::edit(static::$table, static::$id_field, self::remove_id_from_obj($obj), array(
@@ -134,7 +150,7 @@
 		 * Delete a database object
 		 * @param mixed $obj object retrieved from the database before or id to delete
 		 */
-		public function delete($obj) {
+		public static function delete($obj) {
 			return DB::delete(static::$table, array(
 				array('WHERE', static::$id_field, '=', self::get_id($obj))
 			));
