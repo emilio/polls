@@ -25,7 +25,9 @@ if( Config::get('url.pretty') ) {
 			$path = str_replace('?' . $_SERVER['QUERY_STRING'], '', $path);
 		}
 
-		if( $path !== BASE_ABSOLUTE_URL ) {
+		if( $path === BASE_ABSOLUTE_URL ) {
+			$path = '/';
+		} else {
 			$path = substr($path, strlen(BASE_ABSOLUTE_URL));
 		}
 	}
@@ -106,7 +108,6 @@ if( file_exists($controller_path . $controller . '.php') ) {
 	}
 }
 unset($controller_path);
-
 
 if( method_exists($class, 'action_' . $action) ) {
 	$reflection = new ReflectionMethod($class, 'action_' . $action);
