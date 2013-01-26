@@ -17,11 +17,18 @@ if( '/' === DIRECTORY_SEPARATOR ) {
 define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . BASE_ABSOLUTE_URL);
 
 if( Config::get('url.pretty') ) {
-	$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/' . str_replace(array(
-																BASE_ABSOLUTE_URL,
-																(isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : null)
-															), '', $_SERVER['REQUEST_URI']);
+	if( isset($_SERVER['PATH_INFO']) ) {
+		$path = $_SERVER['PATH_INFO'];
+	} else {
+		$path = $_SERVER['REQUEST_URI'];
+		if( isset($_SERVER['QUERY_STRING']) ) {
+			$path = str_replace('?' . $_SERVER['QUERY_STRING'], '', $path);
+		}
 
+		if( $path !== BASE_ABSOLUTE_URL ) {
+			$path = substr($path, strlen(BASE_ABSOLUTE_URL));
+		}
+	}
 	if( is_null($path) ){
 		if( ! Config::get('url.rewrite')) {
 			return Redirect::to( Url::get(), 301 );
