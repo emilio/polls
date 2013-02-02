@@ -17,28 +17,13 @@ if( '/' === DIRECTORY_SEPARATOR ) {
 define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . BASE_ABSOLUTE_URL);
 
 if( Config::get('url.pretty') ) {
-	if( isset($_SERVER['PATH_INFO']) ) {
-		$path = $_SERVER['PATH_INFO'];
+	$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+	if( $path === BASE_ABSOLUTE_URL ) {
+		$path = '/';
 	} else {
-		$path = $_SERVER['REQUEST_URI'];
-		if( isset($_SERVER['QUERY_STRING']) ) {
-			$path = str_replace('?' . $_SERVER['QUERY_STRING'], '', $path);
-		}
-
-		if( $path === BASE_ABSOLUTE_URL ) {
-			$path = '/';
-		} else {
-			$path = substr($path, strlen(BASE_ABSOLUTE_URL));
-		}
+		$path = substr($path, strlen(BASE_ABSOLUTE_URL));
 	}
-	if( is_null($path) ){
-		if( ! Config::get('url.rewrite')) {
-			return Redirect::to( Url::get(), 301 );
-		} else {
-			$path = '/';
-		}
-	}
-
 
 	$path_array = array_filter(explode('/', $path));
 	
@@ -50,7 +35,7 @@ if( Config::get('url.pretty') ) {
 
 	// Forzar las urls para una barra
 	if( $path[strlen($path)-1] !== '/' ) {
-		Redirect::to(Url::get($controller . '@' . $action, $args));
+		Redirect::to(Url::get($controller . '@' . $action, $args, isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : null));
 	}
 
 	unset($path_array);

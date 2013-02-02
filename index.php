@@ -1,8 +1,8 @@
 <?php 
-	error_reporting( E_ALL );
 	session_start();
 	define('SITE_NAME', 'Emilio Cobos-CMC');
-
+	define('DEVELOPEMENT_MODE', true);
+	
 	// Definir los directorios
 	define('BASE_PATH', dirname(__FILE__) . '/');
 

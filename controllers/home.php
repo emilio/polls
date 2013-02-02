@@ -5,11 +5,7 @@ class Home_Controller {
 			->add_var('polls', Poll::all());
 	}
 
-	public static function action_view($slug = null){
-		if( ! $slug ) {
-			return Redirect::to(Url::get(), 301);
-		}
-		
+	public static function action_view($slug){
 		if( ! $poll = Poll::where('slug', '=', $slug)->first() ) {
 			return Response::error(404);
 		}
